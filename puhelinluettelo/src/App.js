@@ -5,6 +5,7 @@ import peopleService from './services/people'
 import AddPersonForm from './components/AddPersonForm';
 import ShowPeople from './components/ShowPeople';
 import FilterPerson from './components/FilterPerson';
+import Info from './components/Info';
 
 
 class App extends React.Component {
@@ -14,7 +15,8 @@ class App extends React.Component {
       people: [],
       newName: '',
       newNumber: '',
-      filter: ''
+      filter: '',
+      info: ''
     }
     console.log("constructor")
   }
@@ -65,9 +67,20 @@ class App extends React.Component {
                       .filter(p => p.id !== person.id)
                       .concat(person),
             newName: '',
-            newNumber: ''
+            newNumber: '',
+            info: `Tiedot päivitetty, ${person.name}`
           })
         })
+        .catch(error => {
+          this.setState({
+            info: `Tietoja (${person.name}) ei valitettavasti löytynytkään kannasta.`,
+            people: this.state.people.filter(p => p.id !== person.id)
+          })
+        })
+
+        setTimeout(() => {
+          this.setState({info: ''})
+        }, 3000)
       }      
     } else {
 
@@ -85,10 +98,19 @@ class App extends React.Component {
           this.setState({
             people: this.state.people.concat(response.data),
             newName: '',
-            newNumber: ''
+            newNumber: '',
+            info: `Tiedot lisätty, ${personObject.name}`
+          })
+        })
+        .catch(error => {
+          this.setState({
+            info: `Hupsista, jotain meni pieleen. Yritä kohta uudestaan.`,
           })
         })
     
+        setTimeout(() => {
+          this.setState({info: ''})
+        }, 3000)
       /*const people = this.state.people.concat(personObject)
     
       this.setState({
@@ -110,10 +132,23 @@ class App extends React.Component {
       .remove(id)
       .then(response => {
         console.log("removePerson promisen then", response)
-        this.setState({ people: this.state.people.filter(p => p.id !== id) })
+        this.setState({ 
+          people: this.state.people.filter(p => p.id !== id),
+          info: `${person.name} tiedot poistettu`
+        })
       })
-    }
+      .catch(error => {
+        this.setState({
+          info: `Tietoja (${person.name}) ei valitettavasti löytynytkään kannasta.`,
+          people: this.state.people.filter(p => p.id !== id)
+        })
+      })
 
+      setTimeout(() => {
+        this.setState({info: ''})
+      }, 3000)
+    }
+    
   }
 
 
@@ -124,6 +159,8 @@ class App extends React.Component {
       <div>
 
         <h1>Puhelinluettelo</h1>
+
+        <Info message={this.state.info}/>
 
         <AddPersonForm 
           onSubmit={this.addPerson}
