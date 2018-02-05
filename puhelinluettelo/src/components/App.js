@@ -1,4 +1,6 @@
 import React from 'react';
+import Axios from 'axios'
+
 import AddPersonForm from './AddPersonForm';
 import ShowPeople from './ShowPeople';
 import FilterPerson from './FilterPerson';
@@ -8,36 +10,42 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      people: [
-        { id:1, name: 'Arto Hellas', number: '12345' },
-        { id:2, name: 'Martti Tienari', number: '040-123456' },
-        { id:3, name: 'Arto Järvinen', number: '040-123456' },
-        { id:4, name: 'Lea Kutvonen', number: '040-123456' }
-      ],
+      people: [],
       newName: '',
       newNumber: '',
       filter: ''
     }
+    console.log("constructor")
+  }
+
+  componentDidMount() {
+    console.log("componentDidMount")
+    Axios
+      .get('http://localhost:3001/people')
+      .then(response => {
+        console.log("promisen then", response)
+        this.setState({ people: response.data })
+      })
   }
 
   handleFilterChange = (event) => {
-    console.log(event.target.value)
+    console.log("handleFilterChange", event.target.value)
     this.setState({ filter: event.target.value })
   }
 
   handleNameChange = (event) => {
-    console.log(event.target.value)
+    console.log("handleNameChange", event.target.value)
     this.setState({ newName: event.target.value })
   }
 
   handleNumberChange = (event) => {
-    console.log(event.target.value)
+    console.log("handleNumberChange", event.target.value)
     this.setState({ newNumber: event.target.value })
   }
 
   addPerson = (event) => {
     event.preventDefault()
-    console.log('nappia painettu')
+    console.log('nappia addPerson painettu')
 
     if(this.state.people.find((x) => this.state.newName === x.name )){
       alert("Nimi on jo tallessa")
@@ -61,6 +69,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log("render", this.state.people)
 
     return (
       <div>
