@@ -7,14 +7,14 @@ const AddPersonForm = ({onSubmit, valueName, onChangeName, valueNumber, onChange
         <h3>Lisää uusi</h3>
             <form onSubmit={onSubmit}>
             <div>
-                nimi: 
+                Nimi : 
                 <input
                 value={valueName}
                 onChange={onChangeName}
             />
             </div>
             <div>
-                numero: 
+                Numero : 
                 <input
                 value={valueNumber}
                 onChange={onChangeNumber}

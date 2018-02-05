@@ -4,7 +4,7 @@ const FilterPerson = ({ value, onChange }) => {
   return (
   
     <p>
-        Rajaa näytettäviä (nimellä)
+        Rajaa näytettäviä (nimellä) :
     
         <input
         value={value}
